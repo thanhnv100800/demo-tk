@@ -3,10 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
+    <title>Firebase & GitHub Pages</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 </head>
 <body>
-    <h1>Chào mừng đến với website của tôi!</h1>
-    <p>Đây là một trang web tĩnh chạy trên GitHub Pages.</p>
+    <h2>Người dùng ngẫu nhiên có trạng thái 0</h2>
+    <p id="user-info">Chưa có dữ liệu</p>
+    <button onclick="getRandomUser()">Lấy tài khoản ngẫu nhiên</button>
+    <button id="updateStatusBtn" style="display:none;" onclick="updateUserStatus()">Cập nhật trạng thái</button>
+
+    <script>
+        // Cấu hình Firebase
+        const firebaseConfig = {
+  apiKey: "AIzaSyDVcyDySVdKD6Hi2yfX2JemkuEwy4dJ_GM",
+  authDomain: "gettktt.firebaseapp.com",
+  projectId: "gettktt",
+  storageBucket: "gettktt.firebasestorage.app",
+  messagingSenderId: "458858887044",
+  appId: "1:458858887044:web:de24d6945e5f9f38ce8fd1",
+  measurementId: "G-8CTF1PC2ST"
+};
+
+        // Khởi tạo Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let selectedUserId = null; // Lưu ID của người dùng được chọn
+
+        async function getRandomUser() {
+            const usersRef = db.collection("users");
+            const snapshot = await usersRef.where("status", "==", 0).get();
+
+            if (snapshot.empty) {
+                document.getElementById("user-info").innerText = "Không có tài khoản nào có trạng thái 0.";
+                document.getElementById("updateStatusBtn").style.display = "none";
+                return;
+            }
+
+            const users = [];
+            snapshot.forEach(doc => {
+                users.push({ id: doc.id, ...doc.data() });
+            });
+
+            // Chọn ngẫu nhiên một người dùng
+            const randomUser = users[Math.floor(Math.random() * users.length)];
+            selectedUserId = randomUser.id;
+            document.getElementById("user-info").innerText = `Username: ${randomUser.username} - Password: ${randomUser.password}`;
+            document.getElementById("updateStatusBtn").style.display = "inline";
+        }
+
+        async function updateUserStatus() {
+            if (!selectedUserId) return;
+
+            await db.collection("users").doc(selectedUserId).update({
+                status: 1
+            });
+
+            document.getElementById("user-info").innerText += " (Trạng thái đã cập nhật)";
+            document.getElementById("updateStatusBtn").style.display = "none";
+        }
+    </script>
 </body>
 </html>
