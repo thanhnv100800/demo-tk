@@ -1,15 +1,20 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    const response = await fetch("data.txt");
-    const text = await response.text();
-    document.getElementById("dataContent").value = text;
+    try {
+        const response = await fetch("data.txt");
+        const text = await response.text();
+        document.getElementById("dataContent").value = text;
+    } catch (error) {
+        console.error("Lỗi khi tải data.txt:", error);
+    }
 });
 
 async function updateData() {
     const newData = document.getElementById("dataContent").value;
-    const repo = "username/repository"; // Cập nhật với thông tin repo của bạn
+    const repo = "username/repository"; // Thay bằng tên repo của bạn
     const filePath = "data.txt";
-    const token = "YOUR_GITHUB_TOKEN"; // Cần tạo GitHub Token với quyền repo
+    const token = "YOUR_GITHUB_TOKEN"; // Tạo token cá nhân trên GitHub
 
+    // Lấy SHA của file hiện tại để cập nhật
     const response = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
         headers: {
             "Authorization": `token ${token}`,
@@ -18,6 +23,7 @@ async function updateData() {
     });
     const fileData = await response.json();
     
+    // Cập nhật nội dung file
     const updateResponse = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
         method: "PUT",
         headers: {
