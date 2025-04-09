@@ -12,7 +12,7 @@ async function updateData() {
     const newData = document.getElementById("dataContent").value;
     const repo = "username/repository"; // Thay bằng tên repo của bạn
     const filePath = "data.txt";
-    const token = "YOUR_GITHUB_TOKEN"; // Tạo token cá nhân trên GitHub
+    const token = "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"; // Tạo token cá nhân trên GitHub
 
     // Lấy SHA của file hiện tại để cập nhật
     const response = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
