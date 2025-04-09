@@ -1,56 +1,57 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách người dùng</title>
+    <title>Insert Data to Firebase</title>
     <script type="module">
-        // Import Firebase SDK (modular)
+        // Import Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Cấu hình Firebase
+        // Firebase configuration (Thay thế bằng thông tin của bạn)
         const firebaseConfig = {
-            apiKey: "AIzaSyDVcyDySVdKD6Hi2yfX2JemkuEwy4dJ_GM",
-            authDomain: "gettktt.firebaseapp.com",
-            projectId: "gettktt",
-            storageBucket: "gettktt.firebasestorage.app",
-            messagingSenderId: "458858887044",
-            appId: "1:458858887044:web:de24d6945e5f9f38ce8fd1",
-            measurementId: "G-8CTF1PC2ST"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
-        // Khởi tạo Firebase
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const database = getDatabase(app);
 
-        // Hàm lấy dữ liệu người dùng
-        async function layThongTin() {
-            const userList = document.getElementById("user-list");
-            userList.innerHTML = ""; // Xóa danh sách cũ
-
-            try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const li = document.createElement("li");
-                    li.textContent = `Username: ${data.username}, Password: ${data.password}, Status: ${data.status}`;
-                    userList.appendChild(li);
+        // Function to insert data
+        window.insertData = function() {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            
+            if (name && email) {
+                const usersRef = ref(database, 'users');
+                const newUserRef = push(usersRef);
+                set(newUserRef, {
+                    name: name,
+                    email: email
+                }).then(() => {
+                    alert("Data inserted successfully!");
+                    document.getElementById("name").value = "";
+                    document.getElementById("email").value = "";
+                }).catch((error) => {
+                    console.error("Error inserting data: ", error);
                 });
-            } catch (error) {
-                console.error("Lỗi lấy dữ liệu:", error);
+            } else {
+                alert("Please fill in all fields!");
             }
-        }
-
-        // Gán sự kiện cho button sau khi DOM đã tải
-        window.onload = () => {
-            document.getElementById("load-btn").addEventListener("click", layThongTin);
         };
     </script>
 </head>
 <body>
-    <h2>Danh sách tài khoản</h2>
-    <button id="load-btn">Lấy thông tin mới</button>
-    <ul id="user-list"></ul>
+    <h2>Insert Data to Firebase Realtime Database</h2>
+    <label>Name: </label><input type="text" id="name"><br>
+    <label>Email: </label><input type="email" id="email"><br>
+    <button onclick="insertData()">Submit</button>
 </body>
 </html>
