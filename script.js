@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 async function updateData() {
     const newData = document.getElementById("dataContent").value;
-    const repo = "username/repository"; // Thay bằng tên repo của bạn
+    const repo = "thanhnv100800/demo-tk"; // Thay bằng tên repo của bạn
     const filePath = "data.txt";
     const token = "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"; // Tạo token cá nhân trên GitHub
 
