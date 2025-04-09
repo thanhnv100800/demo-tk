@@ -1,57 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Data to Firebase</title>
-    <script type="module">
-        // Import Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        // Firebase configuration (Thay thế bằng thông tin của bạn)
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DATABASE_URL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        // Function to insert data
-        window.insertData = function() {
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
-            
-            if (name && email) {
-                const usersRef = ref(database, 'users');
-                const newUserRef = push(usersRef);
-                set(newUserRef, {
-                    name: name,
-                    email: email
-                }).then(() => {
-                    alert("Data inserted successfully!");
-                    document.getElementById("name").value = "";
-                    document.getElementById("email").value = "";
-                }).catch((error) => {
-                    console.error("Error inserting data: ", error);
-                });
-            } else {
-                alert("Please fill in all fields!");
-            }
-        };
-    </script>
+    <title>Chỉnh sửa data.txt</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Insert Data to Firebase Realtime Database</h2>
-    <label>Name: </label><input type="text" id="name"><br>
-    <label>Email: </label><input type="email" id="email"><br>
-    <button onclick="insertData()">Submit</button>
+    <h1>Chỉnh sửa dữ liệu từ data.txt</h1>
+    <textarea id="dataContent" rows="10" cols="50"></textarea>
+    <button onclick="updateData()">Lưu</button>
+    <p id="status"></p>
+    <script src="script.js"></script>
 </body>
 </html>
