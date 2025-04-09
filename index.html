@@ -21,20 +21,24 @@
         };
 
         // Khởi tạo Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        async function fetchUsers() {
-            const usersList = document.getElementById("users");
-            const querySnapshot = await getDocs(collection(db, "users"));
-            usersList.innerHTML = "";
-            querySnapshot.forEach((doc) => {
-                const user = doc.data();
-                usersList.innerHTML += `<li>Username: ${user.username} - Status: ${user.status}</li>`;
+        function layThongTin() {
+            const userList = document.getElementById("user-list");
+            userList.innerHTML = ""; // Xóa danh sách cũ
+
+            db.collection("users").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const li = document.createElement("li");
+                    li.textContent = `Username: ${data.username}, Password: ${data.password}, Status: ${data.status}`;
+                    userList.appendChild(li);
+                });
+            }).catch((error) => {
+                console.error("Lỗi lấy dữ liệu:", error);
             });
         }
-
-        document.addEventListener("DOMContentLoaded", fetchUsers);
     </script>
 </head>
 <body>
